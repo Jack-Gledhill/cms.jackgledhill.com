@@ -11,6 +11,12 @@ type SQLHackathonRepository struct {
 	db *sql.DB
 }
 
+func NewSQLHackathonRepository(db *sql.DB) *SQLHackathonRepository {
+	return &SQLHackathonRepository{
+		db: db,
+	}
+}
+
 func (r *SQLHackathonRepository) Create(ctx context.Context, e *domain.Hackathon) error {
 	query := `INSERT INTO hackathons (title, date, devpost_url, project_id) VALUES ($1, $2, $3, $4)`
 
