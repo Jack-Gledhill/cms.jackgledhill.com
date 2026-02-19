@@ -1,8 +1,11 @@
 package controller
 
 import (
+	"context"
+	"encoding/json"
 	"net/http"
 
+	"github.com/Jack-Gledhill/cms.jackgledhill.com/dto"
 	"github.com/Jack-Gledhill/cms.jackgledhill.com/middleware"
 	"github.com/Jack-Gledhill/cms.jackgledhill.com/service"
 
@@ -24,9 +27,24 @@ func (c *HackathonController) RegisterRoutes(r *mux.Router) {
 }
 
 func (c *HackathonController) Create(w http.ResponseWriter, r *http.Request) {
-
+	// TODO
 }
 
-func (c *HackathonController) GetAll(w http.ResponseWriter, r *http.Request) {
+func (c *HackathonController) GetAll(w http.ResponseWriter, _ *http.Request) {
+	hs, err := c.Service.GetAll(context.Background())
+	if err != nil {
+		// TODO: handle error
+	}
 
+	body := &dto.HackathonList{}
+	body.FromEntities(hs)
+	res, err := json.Marshal(body)
+	if err != nil {
+		// TODO: handle error
+	}
+
+	_, err = w.Write(res)
+	if err != nil {
+		// TODO: handle error
+	}
 }
