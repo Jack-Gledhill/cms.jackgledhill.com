@@ -1,14 +1,6 @@
 package domain
 
-import (
-	"errors"
-	"time"
-)
-
-var (
-	ErrHackathonNotFound = errors.New("hackathon not found")
-	ErrHackathonExists   = errors.New("hackathon already exists")
-)
+import "time"
 
 type Hackathon struct {
 	ID         int

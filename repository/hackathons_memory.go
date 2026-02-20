@@ -25,7 +25,7 @@ func (r *MemoryHackathonRepository) Create(_ context.Context, e *domain.Hackatho
 	defer r.mu.Unlock()
 
 	if _, exists := r.entities[e.ID]; exists {
-		return domain.ErrHackathonExists
+		return ErrHackathonExists
 	}
 	r.entities[e.ID] = e
 	return nil
@@ -37,7 +37,7 @@ func (r *MemoryHackathonRepository) FindByID(_ context.Context, id int) (*domain
 
 	e, exists := r.entities[id]
 	if !exists {
-		return nil, domain.ErrHackathonNotFound
+		return nil, ErrHackathonNotFound
 	}
 	return e, nil
 }
@@ -54,7 +54,7 @@ func (r *MemoryHackathonRepository) Update(_ context.Context, e *domain.Hackatho
 	defer r.mu.Unlock()
 
 	if _, exists := r.entities[e.ID]; !exists {
-		return domain.ErrHackathonNotFound
+		return ErrHackathonNotFound
 	}
 	r.entities[e.ID] = e
 	return nil
@@ -65,7 +65,7 @@ func (r *MemoryHackathonRepository) Delete(_ context.Context, id int) error {
 	defer r.mu.Unlock()
 
 	if _, exists := r.entities[id]; !exists {
-		return domain.ErrHackathonNotFound
+		return ErrHackathonNotFound
 	}
 
 	delete(r.entities, id)
