@@ -12,11 +12,11 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type HackathonController struct {
-	Service service.HackathonService
+type Hackathon struct {
+	Service service.Hackathon
 }
 
-func (c *HackathonController) RegisterRoutes(r *mux.Router) {
+func (c *Hackathon) RegisterRoutes(r *mux.Router) {
 	pub := r.PathPrefix("/hackathons").Subrouter()
 	pub.Use(middleware.EnsureContentType)
 	pub.HandleFunc("/", c.GetAll).Methods("GET")
@@ -26,11 +26,11 @@ func (c *HackathonController) RegisterRoutes(r *mux.Router) {
 	priv.HandleFunc("/", c.Create).Methods("POST")
 }
 
-func (c *HackathonController) Create(w http.ResponseWriter, r *http.Request) {
+func (c *Hackathon) Create(w http.ResponseWriter, r *http.Request) {
 	// TODO
 }
 
-func (c *HackathonController) GetAll(w http.ResponseWriter, _ *http.Request) {
+func (c *Hackathon) GetAll(w http.ResponseWriter, _ *http.Request) {
 	hs, err := c.Service.GetAll(context.Background())
 	if err != nil {
 		// TODO: handle error
