@@ -18,11 +18,19 @@ func NewSQLOccupationRepository(db *sql.DB) *SQLOccupationRepository {
 	}
 }
 
-func (r *SQLOccupationRepository) Create(ctx context.Context, e *domain.Occupation) error {
-	query := `INSERT INTO occupation (name, position, start, end, url) VALUES ($1, $2, $3, $4, $5)`
+func (r *SQLOccupationRepository) Create(ctx context.Context, e *domain.Occupation) (uint, error) {
+	query := `INSERT INTO occupation (name, position, start, end, url) VALUES ($1, $2, $3, $4, $5) RETURNING id`
 
-	_, err := r.db.ExecContext(ctx, query, e.Name, e.Position, e.Start, e.End, e.URL)
-	return err
+	res, err := r.db.ExecContext(ctx, query, e.Name, e.Position, e.Start, e.End, e.URL)
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	return uint(id), nil
 }
 
 func (r *SQLOccupationRepository) FindByID(ctx context.Context, id uint) (*domain.Occupation, error) {

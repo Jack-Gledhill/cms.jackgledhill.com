@@ -16,13 +16,13 @@ func NewMemoryOccupationRepository() *MemoryOccupationRepository {
 	return &MemoryOccupationRepository{}
 }
 
-func (r *MemoryOccupationRepository) Create(_ context.Context, e *domain.Occupation) error {
+func (r *MemoryOccupationRepository) Create(_ context.Context, e *domain.Occupation) (uint, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	e.ID = uint(len(r.entities))
 	r.entities = append(r.entities, e)
-	return nil
+	return e.ID, nil
 }
 
 func (r *MemoryOccupationRepository) FindByID(_ context.Context, id uint) (*domain.Occupation, error) {

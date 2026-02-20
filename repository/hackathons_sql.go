@@ -18,11 +18,19 @@ func NewSQLHackathonRepository(db *sql.DB) *SQLHackathonRepository {
 	}
 }
 
-func (r *SQLHackathonRepository) Create(ctx context.Context, e *domain.Hackathon) error {
-	query := `INSERT INTO hackathons (title, date, devpost_url, project_id) VALUES ($1, $2, $3, $4)`
+func (r *SQLHackathonRepository) Create(ctx context.Context, e *domain.Hackathon) (uint, error) {
+	query := `INSERT INTO hackathons (title, date, devpost_url, project_id) VALUES ($1, $2, $3, $4) RETURNING id`
 
-	_, err := r.db.ExecContext(ctx, query, e.Title, e.Date, e.DevpostURL, e.ProjectID)
-	return err
+	res, err := r.db.ExecContext(ctx, query, e.Title, e.Date, e.DevpostURL, e.ProjectID)
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	return uint(id), nil
 }
 
 func (r *SQLHackathonRepository) FindByID(ctx context.Context, id uint) (*domain.Hackathon, error) {

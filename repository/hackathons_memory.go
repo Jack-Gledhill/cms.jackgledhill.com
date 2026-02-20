@@ -16,13 +16,13 @@ func NewMemoryHackathonRepository() *MemoryHackathonRepository {
 	return &MemoryHackathonRepository{}
 }
 
-func (r *MemoryHackathonRepository) Create(_ context.Context, e *domain.Hackathon) error {
+func (r *MemoryHackathonRepository) Create(_ context.Context, e *domain.Hackathon) (uint, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	e.ID = uint(len(r.entities))
 	r.entities = append(r.entities, e)
-	return nil
+	return e.ID, nil
 }
 
 func (r *MemoryHackathonRepository) FindByID(_ context.Context, id uint) (*domain.Hackathon, error) {
