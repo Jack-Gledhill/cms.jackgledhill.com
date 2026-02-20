@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 
 	"github.com/Jack-Gledhill/cms.jackgledhill.com/domain"
 )
@@ -29,6 +30,10 @@ func (r *SQLHackathonRepository) FindByID(ctx context.Context, id int) (*domain.
 
 	e := &domain.Hackathon{}
 	err := r.db.QueryRowContext(ctx, query, id).Scan(&e.ID, &e.Title, &e.Date, &e.DevpostURL, &e.ProjectID)
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, ErrHackathonNotFound
+	}
+
 	return e, err
 }
 
@@ -52,19 +57,41 @@ func (r *SQLHackathonRepository) FindAll(ctx context.Context) ([]*domain.Hackath
 		es = append(es, e)
 	}
 
-	return es, nil
+	return es, rows.Err()
 }
 
 func (r *SQLHackathonRepository) Update(ctx context.Context, e *domain.Hackathon) error {
 	query := `UPDATE hackathons SET title = $1, date = $2, devpost_url = $3, project_id = $4 WHERE id = $5`
 
-	_, err := r.db.ExecContext(ctx, query, e.Title, e.Date, e.DevpostURL, e.ProjectID, e.ID)
-	return err
+	res, err := r.db.ExecContext(ctx, query, e.Title, e.Date, e.DevpostURL, e.ProjectID, e.ID)
+	if err != nil {
+		return err
+	}
+
+	rows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	} else if rows == 0 {
+		return ErrHackathonNotFound
+	}
+
+	return nil
 }
 
 func (r *SQLHackathonRepository) Delete(ctx context.Context, id int) error {
 	query := `DELETE FROM hackathons WHERE id = $1`
 
-	_, err := r.db.ExecContext(ctx, query, id)
+	res, err := r.db.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+
+	rows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	} else if rows == 0 {
+		return ErrHackathonNotFound
+	}
+
 	return err
 }
