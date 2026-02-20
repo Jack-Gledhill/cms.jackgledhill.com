@@ -6,7 +6,7 @@ import (
 )
 
 type Publication struct {
-	ID      int
+	ID      uint
 	Title   string
 	Authors []string
 	Source  string

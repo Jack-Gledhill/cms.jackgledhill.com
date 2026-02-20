@@ -25,7 +25,7 @@ func (r *SQLHackathonRepository) Create(ctx context.Context, e *domain.Hackathon
 	return err
 }
 
-func (r *SQLHackathonRepository) FindByID(ctx context.Context, id int) (*domain.Hackathon, error) {
+func (r *SQLHackathonRepository) FindByID(ctx context.Context, id uint) (*domain.Hackathon, error) {
 	query := `SELECT id, title, date, devpost_url, project_id FROM hackathons WHERE id = $1`
 
 	e := &domain.Hackathon{}
@@ -78,7 +78,7 @@ func (r *SQLHackathonRepository) Update(ctx context.Context, e *domain.Hackathon
 	return nil
 }
 
-func (r *SQLHackathonRepository) Delete(ctx context.Context, id int) error {
+func (r *SQLHackathonRepository) Delete(ctx context.Context, id uint) error {
 	query := `DELETE FROM hackathons WHERE id = $1`
 
 	res, err := r.db.ExecContext(ctx, query, id)

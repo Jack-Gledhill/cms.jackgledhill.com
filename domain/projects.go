@@ -1,7 +1,7 @@
 package domain
 
 type Project struct {
-	ID      int
+	ID      uint
 	Name    string
 	RepoURL string
 }

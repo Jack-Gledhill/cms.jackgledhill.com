@@ -20,16 +20,16 @@ func (r *MemoryHackathonRepository) Create(_ context.Context, e *domain.Hackatho
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	e.ID = len(r.entities)
+	e.ID = uint(len(r.entities))
 	r.entities = append(r.entities, e)
 	return nil
 }
 
-func (r *MemoryHackathonRepository) FindByID(_ context.Context, id int) (*domain.Hackathon, error) {
+func (r *MemoryHackathonRepository) FindByID(_ context.Context, id uint) (*domain.Hackathon, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if id < 0 || id >= len(r.entities) {
+	if id >= uint(len(r.entities)) {
 		return nil, ErrHackathonNotFound
 	}
 
@@ -57,7 +57,7 @@ func (r *MemoryHackathonRepository) Update(_ context.Context, e *domain.Hackatho
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if e.ID < 0 || e.ID >= len(r.entities) {
+	if e.ID >= uint(len(r.entities)) {
 		return ErrHackathonNotFound
 	}
 
@@ -68,11 +68,11 @@ func (r *MemoryHackathonRepository) Update(_ context.Context, e *domain.Hackatho
 	return nil
 }
 
-func (r *MemoryHackathonRepository) Delete(_ context.Context, id int) error {
+func (r *MemoryHackathonRepository) Delete(_ context.Context, id uint) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if id < 0 || id >= len(r.entities) {
+	if id >= uint(len(r.entities)) {
 		return ErrHackathonNotFound
 	}
 

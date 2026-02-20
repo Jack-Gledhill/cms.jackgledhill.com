@@ -14,8 +14,8 @@ var (
 
 type HackathonRepository interface {
 	Create(ctx context.Context, e *domain.Hackathon) error
-	FindByID(ctx context.Context, id int) (*domain.Hackathon, error)
+	FindByID(ctx context.Context, id uint) (*domain.Hackathon, error)
 	FindAll(ctx context.Context) ([]*domain.Hackathon, error)
 	Update(ctx context.Context, e *domain.Hackathon) error
-	Delete(ctx context.Context, id int) error
+	Delete(ctx context.Context, id uint) error
 }

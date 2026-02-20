@@ -25,7 +25,7 @@ func (r *SQLOccupationRepository) Create(ctx context.Context, e *domain.Occupati
 	return err
 }
 
-func (r *SQLOccupationRepository) FindByID(ctx context.Context, id int) (*domain.Occupation, error) {
+func (r *SQLOccupationRepository) FindByID(ctx context.Context, id uint) (*domain.Occupation, error) {
 	query := `SELECT id, name, position, start, end, url FROM occupation WHERE id = $1`
 
 	e := &domain.Occupation{}
@@ -78,7 +78,7 @@ func (r *SQLOccupationRepository) Update(ctx context.Context, e *domain.Occupati
 	return nil
 }
 
-func (r *SQLOccupationRepository) Delete(ctx context.Context, id int) error {
+func (r *SQLOccupationRepository) Delete(ctx context.Context, id uint) error {
 	query := `DELETE FROM occupation WHERE id = $1`
 
 	res, err := r.db.ExecContext(ctx, query, id)

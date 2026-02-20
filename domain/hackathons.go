@@ -3,7 +3,7 @@ package domain
 import "time"
 
 type Hackathon struct {
-	ID         int
+	ID         uint
 	Title      string
 	Date       time.Time
 	DevpostURL string

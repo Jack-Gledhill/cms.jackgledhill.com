@@ -20,16 +20,16 @@ func (r *MemoryOccupationRepository) Create(_ context.Context, e *domain.Occupat
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	e.ID = len(r.entities)
+	e.ID = uint(len(r.entities))
 	r.entities = append(r.entities, e)
 	return nil
 }
 
-func (r *MemoryOccupationRepository) FindByID(_ context.Context, id int) (*domain.Occupation, error) {
+func (r *MemoryOccupationRepository) FindByID(_ context.Context, id uint) (*domain.Occupation, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if id < 0 || id >= len(r.entities) {
+	if id >= uint(len(r.entities)) {
 		return nil, ErrOccupationNotFound
 	}
 
@@ -57,7 +57,7 @@ func (r *MemoryOccupationRepository) Update(_ context.Context, e *domain.Occupat
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if e.ID < 0 || e.ID >= len(r.entities) {
+	if e.ID >= uint(len(r.entities)) {
 		return ErrHackathonNotFound
 	}
 
@@ -68,11 +68,11 @@ func (r *MemoryOccupationRepository) Update(_ context.Context, e *domain.Occupat
 	return nil
 }
 
-func (r *MemoryOccupationRepository) Delete(_ context.Context, id int) error {
+func (r *MemoryOccupationRepository) Delete(_ context.Context, id uint) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if id < 0 || id >= len(r.entities) {
+	if id >= uint(len(r.entities)) {
 		return ErrHackathonNotFound
 	}
 

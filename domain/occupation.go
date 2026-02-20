@@ -3,7 +3,7 @@ package domain
 import "time"
 
 type Occupation struct {
-	ID       int
+	ID       uint
 	Name     string
 	Position string
 	Start    time.Time
