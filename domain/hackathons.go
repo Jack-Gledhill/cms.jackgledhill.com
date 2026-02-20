@@ -7,5 +7,5 @@ type Hackathon struct {
 	Title      string
 	Date       time.Time
 	DevpostURL string
-	ProjectID  int
+	ProjectID  uint
 }

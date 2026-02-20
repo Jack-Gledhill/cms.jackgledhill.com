@@ -4,5 +4,5 @@ type HackathonCreate struct {
 	Title      string `json:"title"`
 	Date       string `json:"date"`
 	DevpostURL string `json:"devpost_url"`
-	ProjectID  int    `json:"project_id"`
+	ProjectID  uint   `json:"project_id"`
 }
