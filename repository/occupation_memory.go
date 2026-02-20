@@ -2,8 +2,6 @@ package repository
 
 import (
 	"context"
-	"maps"
-	"slices"
 	"sync"
 
 	"github.com/Jack-Gledhill/cms.jackgledhill.com/domain"
@@ -11,23 +9,19 @@ import (
 
 type MemoryOccupationRepository struct {
 	mu       sync.RWMutex
-	entities map[int]*domain.Occupation
+	entities []*domain.Occupation
 }
 
 func NewMemoryOccupationRepository() *MemoryOccupationRepository {
-	return &MemoryOccupationRepository{
-		entities: make(map[int]*domain.Occupation),
-	}
+	return &MemoryOccupationRepository{}
 }
 
 func (r *MemoryOccupationRepository) Create(_ context.Context, e *domain.Occupation) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if _, exists := r.entities[e.ID]; exists {
-		return ErrOccupationExists
-	}
-	r.entities[e.ID] = e
+	e.ID = len(r.entities)
+	r.entities = append(r.entities, e)
 	return nil
 }
 
@@ -35,9 +29,13 @@ func (r *MemoryOccupationRepository) FindByID(_ context.Context, id int) (*domai
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	e, exists := r.entities[id]
-	if !exists {
+	if id < 0 || id >= len(r.entities) {
 		return nil, ErrOccupationNotFound
+	}
+
+	e := r.entities[id]
+	if e == nil {
+		return nil, ErrOccupationExists
 	}
 	return e, nil
 }
@@ -46,15 +44,25 @@ func (r *MemoryOccupationRepository) FindAll(_ context.Context) ([]*domain.Occup
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	return slices.Collect(maps.Values(r.entities)), nil
+	var es []*domain.Occupation
+	for _, e := range r.entities {
+		if e != nil {
+			es = append(es, e)
+		}
+	}
+	return es, nil
 }
 
 func (r *MemoryOccupationRepository) Update(_ context.Context, e *domain.Occupation) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if _, exists := r.entities[e.ID]; !exists {
-		return ErrOccupationNotFound
+	if e.ID < 0 || e.ID >= len(r.entities) {
+		return ErrHackathonNotFound
+	}
+
+	if r.entities[e.ID] == nil {
+		return ErrHackathonNotFound
 	}
 	r.entities[e.ID] = e
 	return nil
@@ -64,10 +72,13 @@ func (r *MemoryOccupationRepository) Delete(_ context.Context, id int) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if _, exists := r.entities[id]; !exists {
-		return ErrOccupationNotFound
+	if id < 0 || id >= len(r.entities) {
+		return ErrHackathonNotFound
 	}
 
-	delete(r.entities, id)
+	if r.entities[id] == nil {
+		return ErrHackathonNotFound
+	}
+	r.entities[id] = nil
 	return nil
 }

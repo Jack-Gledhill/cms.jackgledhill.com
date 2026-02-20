@@ -2,8 +2,6 @@ package repository
 
 import (
 	"context"
-	"maps"
-	"slices"
 	"sync"
 
 	"github.com/Jack-Gledhill/cms.jackgledhill.com/domain"
@@ -11,23 +9,19 @@ import (
 
 type MemoryHackathonRepository struct {
 	mu       sync.RWMutex
-	entities map[int]*domain.Hackathon
+	entities []*domain.Hackathon
 }
 
 func NewMemoryHackathonRepository() *MemoryHackathonRepository {
-	return &MemoryHackathonRepository{
-		entities: make(map[int]*domain.Hackathon),
-	}
+	return &MemoryHackathonRepository{}
 }
 
 func (r *MemoryHackathonRepository) Create(_ context.Context, e *domain.Hackathon) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if _, exists := r.entities[e.ID]; exists {
-		return ErrHackathonExists
-	}
-	r.entities[e.ID] = e
+	e.ID = len(r.entities)
+	r.entities = append(r.entities, e)
 	return nil
 }
 
@@ -35,8 +29,12 @@ func (r *MemoryHackathonRepository) FindByID(_ context.Context, id int) (*domain
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	e, exists := r.entities[id]
-	if !exists {
+	if id < 0 || id >= len(r.entities) {
+		return nil, ErrHackathonNotFound
+	}
+
+	e := r.entities[id]
+	if e == nil {
 		return nil, ErrHackathonNotFound
 	}
 	return e, nil
@@ -46,14 +44,24 @@ func (r *MemoryHackathonRepository) FindAll(_ context.Context) ([]*domain.Hackat
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	return slices.Collect(maps.Values(r.entities)), nil
+	var es []*domain.Hackathon
+	for _, e := range r.entities {
+		if e != nil {
+			es = append(es, e)
+		}
+	}
+	return es, nil
 }
 
 func (r *MemoryHackathonRepository) Update(_ context.Context, e *domain.Hackathon) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if _, exists := r.entities[e.ID]; !exists {
+	if e.ID < 0 || e.ID >= len(r.entities) {
+		return ErrHackathonNotFound
+	}
+
+	if r.entities[e.ID] == nil {
 		return ErrHackathonNotFound
 	}
 	r.entities[e.ID] = e
@@ -64,10 +72,13 @@ func (r *MemoryHackathonRepository) Delete(_ context.Context, id int) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if _, exists := r.entities[id]; !exists {
+	if id < 0 || id >= len(r.entities) {
 		return ErrHackathonNotFound
 	}
 
-	delete(r.entities, id)
+	if r.entities[id] == nil {
+		return ErrHackathonNotFound
+	}
+	r.entities[id] = nil
 	return nil
 }
