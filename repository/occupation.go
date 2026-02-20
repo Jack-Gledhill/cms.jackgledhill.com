@@ -2,8 +2,14 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"github.com/Jack-Gledhill/cms.jackgledhill.com/domain"
+)
+
+var (
+	ErrOccupationNotFound = errors.New("occupation not found")
+	ErrOccupationExists   = errors.New("occupation already exists")
 )
 
 type OccupationRepository interface {
