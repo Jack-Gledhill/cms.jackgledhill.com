@@ -20,15 +20,19 @@ func (c *Hackathon) RegisterRoutes(r *mux.Router) {
 	pub := r.PathPrefix("/hackathons").Subrouter()
 	pub.Use(middleware.EnsureContentType)
 	pub.HandleFunc("/", c.GetAll).Methods("GET")
+	pub.HandleFunc("/{id:[0-9]+}", c.GetByID).Methods("GET")
 
 	priv := r.PathPrefix("/hackathons").Subrouter()
+	priv.Use(middleware.EnsureContentType)
 	priv.Use(middleware.EnsureAuthentication)
 	priv.HandleFunc("/", c.Create).Methods("POST")
+	priv.HandleFunc("/{id:[0-9]+}", c.Update).Methods("POST")
+	priv.HandleFunc("/{id:[0-9]+}", c.Delete).Methods("DELETE")
 }
 
-func (c *Hackathon) Create(w http.ResponseWriter, r *http.Request) {
-	// TODO
-}
+func (c *Hackathon) Create(w http.ResponseWriter, r *http.Request) {}
+
+func (c *Hackathon) GetByID(w http.ResponseWriter, r *http.Request) {}
 
 func (c *Hackathon) GetAll(w http.ResponseWriter, _ *http.Request) {
 	hs, err := c.Service.GetAll(context.Background())
@@ -48,3 +52,7 @@ func (c *Hackathon) GetAll(w http.ResponseWriter, _ *http.Request) {
 		// TODO: handle error
 	}
 }
+
+func (c *Hackathon) Update(w http.ResponseWriter, r *http.Request) {}
+
+func (c *Hackathon) Delete(w http.ResponseWriter, r *http.Request) {}
