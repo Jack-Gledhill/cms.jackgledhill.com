@@ -27,9 +27,9 @@ func (r *SQLHackathonRepository) Create(ctx context.Context, e *domain.Hackathon
 func (r *SQLHackathonRepository) FindByID(ctx context.Context, id int) (*domain.Hackathon, error) {
 	query := `SELECT id, title, date, devpost_url, project_id FROM hackathons WHERE id = $1`
 
-	h := &domain.Hackathon{}
-	err := r.db.QueryRowContext(ctx, query, id).Scan(&h.ID, &h.Title, &h.Date, &h.DevpostURL, &h.ProjectID)
-	return h, err
+	e := &domain.Hackathon{}
+	err := r.db.QueryRowContext(ctx, query, id).Scan(&e.ID, &e.Title, &e.Date, &e.DevpostURL, &e.ProjectID)
+	return e, err
 }
 
 func (r *SQLHackathonRepository) FindAll(ctx context.Context) ([]*domain.Hackathon, error) {
@@ -41,18 +41,18 @@ func (r *SQLHackathonRepository) FindAll(ctx context.Context) ([]*domain.Hackath
 	}
 	defer rows.Close()
 
-	var hs []*domain.Hackathon
+	var es []*domain.Hackathon
 	for rows.Next() {
-		h := &domain.Hackathon{}
-		err = rows.Scan(&h.ID, &h.Title, &h.Date, &h.DevpostURL, &h.ProjectID)
+		e := &domain.Hackathon{}
+		err = rows.Scan(&e.ID, &e.Title, &e.Date, &e.DevpostURL, &e.ProjectID)
 		if err != nil {
 			return nil, err
 		}
 
-		hs = append(hs, h)
+		es = append(es, e)
 	}
 
-	return hs, nil
+	return es, nil
 }
 
 func (r *SQLHackathonRepository) Update(ctx context.Context, e *domain.Hackathon) error {

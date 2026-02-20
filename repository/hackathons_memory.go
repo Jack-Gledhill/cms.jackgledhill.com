@@ -10,13 +10,13 @@ import (
 )
 
 type MemoryHackathonRepository struct {
-	mu         sync.RWMutex
-	hackathons map[int]*domain.Hackathon
+	mu       sync.RWMutex
+	entities map[int]*domain.Hackathon
 }
 
 func NewMemoryHackathonRepository() *MemoryHackathonRepository {
 	return &MemoryHackathonRepository{
-		hackathons: make(map[int]*domain.Hackathon),
+		entities: make(map[int]*domain.Hackathon),
 	}
 }
 
@@ -24,10 +24,10 @@ func (r *MemoryHackathonRepository) Create(_ context.Context, e *domain.Hackatho
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if _, exists := r.hackathons[e.ID]; exists {
+	if _, exists := r.entities[e.ID]; exists {
 		return domain.ErrHackathonExists
 	}
-	r.hackathons[e.ID] = e
+	r.entities[e.ID] = e
 	return nil
 }
 
@@ -35,28 +35,28 @@ func (r *MemoryHackathonRepository) FindByID(_ context.Context, id int) (*domain
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	h, exists := r.hackathons[id]
+	e, exists := r.entities[id]
 	if !exists {
 		return nil, domain.ErrHackathonNotFound
 	}
-	return h, nil
+	return e, nil
 }
 
 func (r *MemoryHackathonRepository) FindAll(_ context.Context) ([]*domain.Hackathon, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	return slices.Collect(maps.Values(r.hackathons)), nil
+	return slices.Collect(maps.Values(r.entities)), nil
 }
 
 func (r *MemoryHackathonRepository) Update(_ context.Context, e *domain.Hackathon) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if _, exists := r.hackathons[e.ID]; !exists {
+	if _, exists := r.entities[e.ID]; !exists {
 		return domain.ErrHackathonNotFound
 	}
-	r.hackathons[e.ID] = e
+	r.entities[e.ID] = e
 	return nil
 }
 
@@ -64,10 +64,10 @@ func (r *MemoryHackathonRepository) Delete(_ context.Context, id int) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if _, exists := r.hackathons[id]; !exists {
+	if _, exists := r.entities[id]; !exists {
 		return domain.ErrHackathonNotFound
 	}
 
-	delete(r.hackathons, id)
+	delete(r.entities, id)
 	return nil
 }
