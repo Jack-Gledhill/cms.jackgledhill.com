@@ -8,17 +8,17 @@ import (
 	"github.com/Jack-Gledhill/cms.jackgledhill.com/domain"
 )
 
-type SQLOccupationRepository struct {
+type OccupationSQL struct {
 	db *sql.DB
 }
 
-func NewSQLOccupationRepository(db *sql.DB) *SQLOccupationRepository {
-	return &SQLOccupationRepository{
+func NewOccupationSQL(db *sql.DB) *OccupationSQL {
+	return &OccupationSQL{
 		db: db,
 	}
 }
 
-func (r *SQLOccupationRepository) Create(ctx context.Context, e *domain.Occupation) (uint, error) {
+func (r *OccupationSQL) Create(ctx context.Context, e *domain.Occupation) (uint, error) {
 	query := `INSERT INTO occupation (name, position, start, end, url) VALUES ($1, $2, $3, $4, $5) RETURNING id`
 
 	res, err := r.db.ExecContext(ctx, query, e.Name, e.Position, e.Start, e.End, e.URL)
@@ -33,7 +33,7 @@ func (r *SQLOccupationRepository) Create(ctx context.Context, e *domain.Occupati
 	return uint(id), nil
 }
 
-func (r *SQLOccupationRepository) FindByID(ctx context.Context, id uint) (*domain.Occupation, error) {
+func (r *OccupationSQL) FindByID(ctx context.Context, id uint) (*domain.Occupation, error) {
 	query := `SELECT id, name, position, start, end, url FROM occupation WHERE id = $1`
 
 	e := &domain.Occupation{}
@@ -45,7 +45,7 @@ func (r *SQLOccupationRepository) FindByID(ctx context.Context, id uint) (*domai
 	return e, err
 }
 
-func (r *SQLOccupationRepository) FindAll(ctx context.Context) ([]*domain.Occupation, error) {
+func (r *OccupationSQL) FindAll(ctx context.Context) ([]*domain.Occupation, error) {
 	query := `SELECT id, name, position, start, end, url FROM occupation`
 
 	rows, err := r.db.QueryContext(ctx, query)
@@ -68,7 +68,7 @@ func (r *SQLOccupationRepository) FindAll(ctx context.Context) ([]*domain.Occupa
 	return es, rows.Err()
 }
 
-func (r *SQLOccupationRepository) Update(ctx context.Context, e *domain.Occupation) error {
+func (r *OccupationSQL) Update(ctx context.Context, e *domain.Occupation) error {
 	query := `UPDATE occupation SET name = $1, position = $2, start = $3, end = $4, url = $5 WHERE id = $6`
 
 	res, err := r.db.ExecContext(ctx, query, e.Name, e.Position, e.Start, e.End, e.URL, e.ID)
@@ -86,7 +86,7 @@ func (r *SQLOccupationRepository) Update(ctx context.Context, e *domain.Occupati
 	return nil
 }
 
-func (r *SQLOccupationRepository) Delete(ctx context.Context, id uint) error {
+func (r *OccupationSQL) Delete(ctx context.Context, id uint) error {
 	query := `DELETE FROM occupation WHERE id = $1`
 
 	res, err := r.db.ExecContext(ctx, query, id)

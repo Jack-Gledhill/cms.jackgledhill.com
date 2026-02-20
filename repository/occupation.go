@@ -12,7 +12,7 @@ var (
 	ErrOccupationExists   = errors.New("occupation already exists")
 )
 
-type OccupationRepository interface {
+type Occupation interface {
 	Create(ctx context.Context, occupation *domain.Occupation) (uint, error)
 	FindByID(ctx context.Context, id uint) (*domain.Occupation, error)
 	FindAll(ctx context.Context) ([]*domain.Occupation, error)

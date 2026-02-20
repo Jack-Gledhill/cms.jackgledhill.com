@@ -8,17 +8,17 @@ import (
 	"github.com/Jack-Gledhill/cms.jackgledhill.com/domain"
 )
 
-type SQLHackathonRepository struct {
+type HackathonSQL struct {
 	db *sql.DB
 }
 
-func NewSQLHackathonRepository(db *sql.DB) *SQLHackathonRepository {
-	return &SQLHackathonRepository{
+func NewHackathonSQL(db *sql.DB) *HackathonSQL {
+	return &HackathonSQL{
 		db: db,
 	}
 }
 
-func (r *SQLHackathonRepository) Create(ctx context.Context, e *domain.Hackathon) (uint, error) {
+func (r *HackathonSQL) Create(ctx context.Context, e *domain.Hackathon) (uint, error) {
 	query := `INSERT INTO hackathons (title, date, devpost_url, project_id) VALUES ($1, $2, $3, $4) RETURNING id`
 
 	res, err := r.db.ExecContext(ctx, query, e.Title, e.Date, e.DevpostURL, e.ProjectID)
@@ -33,7 +33,7 @@ func (r *SQLHackathonRepository) Create(ctx context.Context, e *domain.Hackathon
 	return uint(id), nil
 }
 
-func (r *SQLHackathonRepository) FindByID(ctx context.Context, id uint) (*domain.Hackathon, error) {
+func (r *HackathonSQL) FindByID(ctx context.Context, id uint) (*domain.Hackathon, error) {
 	query := `SELECT id, title, date, devpost_url, project_id FROM hackathons WHERE id = $1`
 
 	e := &domain.Hackathon{}
@@ -45,7 +45,7 @@ func (r *SQLHackathonRepository) FindByID(ctx context.Context, id uint) (*domain
 	return e, err
 }
 
-func (r *SQLHackathonRepository) FindAll(ctx context.Context) ([]*domain.Hackathon, error) {
+func (r *HackathonSQL) FindAll(ctx context.Context) ([]*domain.Hackathon, error) {
 	query := `SELECT id, title, date, devpost_url, project_id FROM hackathons`
 
 	rows, err := r.db.QueryContext(ctx, query)
@@ -68,7 +68,7 @@ func (r *SQLHackathonRepository) FindAll(ctx context.Context) ([]*domain.Hackath
 	return es, rows.Err()
 }
 
-func (r *SQLHackathonRepository) Update(ctx context.Context, e *domain.Hackathon) error {
+func (r *HackathonSQL) Update(ctx context.Context, e *domain.Hackathon) error {
 	query := `UPDATE hackathons SET title = $1, date = $2, devpost_url = $3, project_id = $4 WHERE id = $5`
 
 	res, err := r.db.ExecContext(ctx, query, e.Title, e.Date, e.DevpostURL, e.ProjectID, e.ID)
@@ -86,7 +86,7 @@ func (r *SQLHackathonRepository) Update(ctx context.Context, e *domain.Hackathon
 	return nil
 }
 
-func (r *SQLHackathonRepository) Delete(ctx context.Context, id uint) error {
+func (r *HackathonSQL) Delete(ctx context.Context, id uint) error {
 	query := `DELETE FROM hackathons WHERE id = $1`
 
 	res, err := r.db.ExecContext(ctx, query, id)

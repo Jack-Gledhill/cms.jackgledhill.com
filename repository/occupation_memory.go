@@ -7,16 +7,16 @@ import (
 	"github.com/Jack-Gledhill/cms.jackgledhill.com/domain"
 )
 
-type MemoryOccupationRepository struct {
+type OccupationMemory struct {
 	mu       sync.RWMutex
 	entities []*domain.Occupation
 }
 
-func NewMemoryOccupationRepository() *MemoryOccupationRepository {
-	return &MemoryOccupationRepository{}
+func NewOccupationMemory() *OccupationMemory {
+	return &OccupationMemory{}
 }
 
-func (r *MemoryOccupationRepository) Create(_ context.Context, e *domain.Occupation) (uint, error) {
+func (r *OccupationMemory) Create(_ context.Context, e *domain.Occupation) (uint, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -25,7 +25,7 @@ func (r *MemoryOccupationRepository) Create(_ context.Context, e *domain.Occupat
 	return e.ID, nil
 }
 
-func (r *MemoryOccupationRepository) FindByID(_ context.Context, id uint) (*domain.Occupation, error) {
+func (r *OccupationMemory) FindByID(_ context.Context, id uint) (*domain.Occupation, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -35,12 +35,12 @@ func (r *MemoryOccupationRepository) FindByID(_ context.Context, id uint) (*doma
 
 	e := r.entities[id]
 	if e == nil {
-		return nil, ErrOccupationExists
+		return nil, ErrOccupationNotFound
 	}
 	return e, nil
 }
 
-func (r *MemoryOccupationRepository) FindAll(_ context.Context) ([]*domain.Occupation, error) {
+func (r *OccupationMemory) FindAll(_ context.Context) ([]*domain.Occupation, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -53,7 +53,7 @@ func (r *MemoryOccupationRepository) FindAll(_ context.Context) ([]*domain.Occup
 	return es, nil
 }
 
-func (r *MemoryOccupationRepository) Update(_ context.Context, e *domain.Occupation) error {
+func (r *OccupationMemory) Update(_ context.Context, e *domain.Occupation) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -68,7 +68,7 @@ func (r *MemoryOccupationRepository) Update(_ context.Context, e *domain.Occupat
 	return nil
 }
 
-func (r *MemoryOccupationRepository) Delete(_ context.Context, id uint) error {
+func (r *OccupationMemory) Delete(_ context.Context, id uint) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 

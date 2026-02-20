@@ -6,7 +6,7 @@ import (
 	"github.com/Jack-Gledhill/cms.jackgledhill.com/domain"
 )
 
-type ProjectRepository interface {
+type Project interface {
 	Create(ctx context.Context, project *domain.Project) (uint, error)
 	FindByID(ctx context.Context, id uint) (*domain.Project, error)
 	FindAll(ctx context.Context) ([]*domain.Project, error)

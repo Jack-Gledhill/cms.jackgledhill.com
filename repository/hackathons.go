@@ -12,7 +12,7 @@ var (
 	ErrHackathonExists   = errors.New("hackathon already exists")
 )
 
-type HackathonRepository interface {
+type Hackathon interface {
 	Create(ctx context.Context, e *domain.Hackathon) (uint, error)
 	FindByID(ctx context.Context, id uint) (*domain.Hackathon, error)
 	FindAll(ctx context.Context) ([]*domain.Hackathon, error)

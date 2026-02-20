@@ -7,16 +7,16 @@ import (
 	"github.com/Jack-Gledhill/cms.jackgledhill.com/domain"
 )
 
-type MemoryHackathonRepository struct {
+type HackathonMemory struct {
 	mu       sync.RWMutex
 	entities []*domain.Hackathon
 }
 
-func NewMemoryHackathonRepository() *MemoryHackathonRepository {
-	return &MemoryHackathonRepository{}
+func NewHackathonMemory() *HackathonMemory {
+	return &HackathonMemory{}
 }
 
-func (r *MemoryHackathonRepository) Create(_ context.Context, e *domain.Hackathon) (uint, error) {
+func (r *HackathonMemory) Create(_ context.Context, e *domain.Hackathon) (uint, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -25,7 +25,7 @@ func (r *MemoryHackathonRepository) Create(_ context.Context, e *domain.Hackatho
 	return e.ID, nil
 }
 
-func (r *MemoryHackathonRepository) FindByID(_ context.Context, id uint) (*domain.Hackathon, error) {
+func (r *HackathonMemory) FindByID(_ context.Context, id uint) (*domain.Hackathon, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -40,7 +40,7 @@ func (r *MemoryHackathonRepository) FindByID(_ context.Context, id uint) (*domai
 	return e, nil
 }
 
-func (r *MemoryHackathonRepository) FindAll(_ context.Context) ([]*domain.Hackathon, error) {
+func (r *HackathonMemory) FindAll(_ context.Context) ([]*domain.Hackathon, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -53,7 +53,7 @@ func (r *MemoryHackathonRepository) FindAll(_ context.Context) ([]*domain.Hackat
 	return es, nil
 }
 
-func (r *MemoryHackathonRepository) Update(_ context.Context, e *domain.Hackathon) error {
+func (r *HackathonMemory) Update(_ context.Context, e *domain.Hackathon) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -68,7 +68,7 @@ func (r *MemoryHackathonRepository) Update(_ context.Context, e *domain.Hackatho
 	return nil
 }
 
-func (r *MemoryHackathonRepository) Delete(_ context.Context, id uint) error {
+func (r *HackathonMemory) Delete(_ context.Context, id uint) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
