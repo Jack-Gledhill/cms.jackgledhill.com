@@ -7,26 +7,26 @@ import (
 	"github.com/Jack-Gledhill/cms.jackgledhill.com/repository"
 )
 
-type HackathonService struct {
-	Repo repository.HackathonRepository
+type Hackathon struct {
+	Repo repository.Hackathon
 }
 
-func (s *HackathonService) Create(ctx context.Context, hackathon *domain.Hackathon) error {
+func (s *Hackathon) Create(ctx context.Context, hackathon *domain.Hackathon) (uint, error) {
 	return s.Repo.Create(ctx, hackathon)
 }
 
-func (s *HackathonService) GetByID(ctx context.Context, id int) (*domain.Hackathon, error) {
+func (s *Hackathon) GetByID(ctx context.Context, id uint) (*domain.Hackathon, error) {
 	return s.Repo.FindByID(ctx, id)
 }
 
-func (s *HackathonService) GetAll(ctx context.Context) ([]*domain.Hackathon, error) {
+func (s *Hackathon) GetAll(ctx context.Context) ([]*domain.Hackathon, error) {
 	return s.Repo.FindAll(ctx)
 }
 
-func (s *HackathonService) Update(ctx context.Context, hackathon *domain.Hackathon) error {
+func (s *Hackathon) Update(ctx context.Context, hackathon *domain.Hackathon) error {
 	return s.Repo.Update(ctx, hackathon)
 }
 
-func (s *HackathonService) Delete(ctx context.Context, id int) error {
+func (s *Hackathon) Delete(ctx context.Context, id uint) error {
 	return s.Repo.Delete(ctx, id)
 }
