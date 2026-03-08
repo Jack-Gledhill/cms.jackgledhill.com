@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 
-	"github.com/Jack-Gledhill/cms.jackgledhill.com/domain"
-	"github.com/Jack-Gledhill/cms.jackgledhill.com/repository"
+	"github.com/Jack-Gledhill/crud.jackgledhill.com/domain"
+	"github.com/Jack-Gledhill/crud.jackgledhill.com/repository"
 )
 
 type Occupation struct {

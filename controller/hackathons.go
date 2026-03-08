@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/Jack-Gledhill/cms.jackgledhill.com/dto"
-	"github.com/Jack-Gledhill/cms.jackgledhill.com/middleware"
-	"github.com/Jack-Gledhill/cms.jackgledhill.com/service"
+	"github.com/Jack-Gledhill/crud.jackgledhill.com/dto"
+	"github.com/Jack-Gledhill/crud.jackgledhill.com/middleware"
+	"github.com/Jack-Gledhill/crud.jackgledhill.com/service"
 
 	"github.com/gorilla/mux"
 )

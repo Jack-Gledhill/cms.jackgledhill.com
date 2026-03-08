@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/Jack-Gledhill/cms.jackgledhill.com/domain"
+	"github.com/Jack-Gledhill/crud.jackgledhill.com/domain"
 )
 
 type HackathonSQL struct {

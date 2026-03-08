@@ -1,4 +1,4 @@
-module github.com/Jack-Gledhill/cms.jackgledhill.com
+module github.com/Jack-Gledhill/crud.jackgledhill.com
 
 go 1.24.11
 

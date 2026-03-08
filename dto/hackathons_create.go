@@ -3,7 +3,7 @@ package dto
 import (
 	"time"
 
-	"github.com/Jack-Gledhill/cms.jackgledhill.com/domain"
+	"github.com/Jack-Gledhill/crud.jackgledhill.com/domain"
 )
 
 type HackathonCreate struct {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/Jack-Gledhill/cms.jackgledhill.com/domain"
+	"github.com/Jack-Gledhill/crud.jackgledhill.com/domain"
 )
 
 type OccupationMemory struct {

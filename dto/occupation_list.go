@@ -1,6 +1,6 @@
 package dto
 
-import "github.com/Jack-Gledhill/cms.jackgledhill.com/domain"
+import "github.com/Jack-Gledhill/crud.jackgledhill.com/domain"
 
 type OccupationList struct {
 	Occupation []OccupationResponse `json:"occupation"`
